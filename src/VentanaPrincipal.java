@@ -11,26 +11,30 @@ public class VentanaPrincipal {
     private JTextField inputCilindro;
     private JButton retrocedeButton;
     private JTextField inputMarca;
-    private JButton cargarButton;
     private JButton guardarButton;
+
+    private int items = 0;
     String filepath ="datos.txt";
     ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
-
 
     public VentanaPrincipal() {
         avanzaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                for(int i=0; i<4; i++){
-                    String marca= inputMarca.getText();
-                    String year= inputYear.getText();
-                    String cilindro= inputCilindro.getText();
+                /*Definimos el objeto*/
+                Vehiculo object = new Vehiculo(inputMarca.getText(), inputYear.getText(), inputCilindro.getText());
 
-                    vehiculos.add(new Vehiculo(marca, year, cilindro));
+                /*Elementos del objeto
+                String marca= inputMarca.getText();
+                String year= inputYear.getText();
+                String cilindro= inputCilindro.getText();*/
+
+                for(int i=0; i<=items; i=i+1){
+                    vehiculos.add(object);
                 }
 
-            try(FileOutputStream fileOutputStream = new FileOutputStream(filepath);
+                try(FileOutputStream fileOutputStream = new FileOutputStream(filepath);
                 ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream))
             {
 
@@ -62,9 +66,9 @@ public class VentanaPrincipal {
                 ObjectInputStream objectInputStream=new ObjectInputStream(fileInputStream))
                 {
                    for (Vehiculo vehiculo: vehiculos){
-                       System.out.println("Marca: "+vehiculo.getMarca());
-                       System.out.println("Año: "+vehiculo.getYear());
-                       System.out.println("Cilindro: "+vehiculo.getCilindro());
+                       inputMarca.setText(vehiculo.getMarca());
+                       inputYear.setText(vehiculo.getYear());
+                       inputCilindro.setText(vehiculo.getCilindro());
                    }
                 }catch (IOException exception){
                     throw new RuntimeException(exception);
