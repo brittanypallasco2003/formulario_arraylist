@@ -6,14 +6,14 @@ import java.util.ArrayList;
 
 public class VentanaPrincipal {
     private JPanel rootPanel;
-    private JTextField textField1;
+    private JTextField inputYear;
     private JButton avanzaButton;
-    private JTextField textField2;
+    private JTextField inputCilindro;
     private JButton retrocedeButton;
-    private JTextField textField3;
+    private JTextField inputMarca;
     private JButton cargarButton;
     private JButton guardarButton;
-    String filepath ="datos.dat";
+    String filepath ="datos.txt";
     ArrayList<Vehiculo> vehiculos = new ArrayList<Vehiculo>();
 
 
@@ -21,35 +21,37 @@ public class VentanaPrincipal {
         avanzaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                vehiculos.add(new Vehiculo("","",""));
-                vehiculos.add(new Vehiculo("","",""));
-                vehiculos.add(new Vehiculo("","",""));
-                vehiculos.add(new Vehiculo("","",""));
 
+                for(int i=0; i<4; i++){
+                    String marca= inputMarca.getText();
+                    String year= inputYear.getText();
+                    String cilindro= inputCilindro.getText();
+
+                    vehiculos.add(new Vehiculo(marca, year, cilindro));
+                }
 
             try(FileOutputStream fileOutputStream = new FileOutputStream(filepath);
                 ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream))
             {
-                for(Vehiculo vehiculo: vehiculos){
 
-                    String marca=textField1.getText();
-                    vehiculo.setMarca(marca);
-                    String year=textField2.getText();
-                    vehiculo.setYear(year);
-                    String cilindro=textField3.getText();
-                    vehiculo.setCilindro(cilindro);
-
-                    outputStream.writeObject(vehiculo);
+                for (int i=0; i<vehiculos.size(); i++){
+                    if((vehiculos.get(i++).equals(vehiculos.get(i-1)))) break;
+                    else {
+                        outputStream.writeObject(vehiculos.get(i).getMarca());
+                        outputStream.writeObject(vehiculos.get(i).getYear());
+                        outputStream.writeObject(vehiculos.get(i).getCilindro());
+                    }
                 }
+
 
             }catch (IOException exception){
                 throw new RuntimeException(new Exception(exception));
             }
 
 
-            textField1.setText("");
-            textField2.setText("");
-            textField3.setText("");
+            inputYear.setText("");
+            inputCilindro.setText("");
+            inputMarca.setText("");
 
             }
         });
